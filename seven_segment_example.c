@@ -6,8 +6,8 @@
  * Metre Ideas and Design
  * Copyright (c) 2016
  *
- * This program is an example driver for a two-digit seven segment LED display module.
- * The two digits of the display module share a common set of control lines.
+ * This program is a driver example for a two-digit seven segment LED display module.
+ * The two digits of the display module share a common set of data lines.
  * Therefore, to display a two-digit number the individual digits must be displayed
  * one at time and cycled back and forth continuously.
 
@@ -20,17 +20,17 @@
  *
  */ 
 
-#include <avr/interrupt.h>
 #include <avr/sleep.h>
 #include "seven_segment_example.h"
 #include "seven_segment_display.h"
 #include <avr/power.h>
 #include <avr/io.h>
-#include <util/delay.h>
 
 /* set the correct clock frequency based on fuse settings or external clock/crystal
  * has to be done before including delay.h */
-//#define F_CPU 8000000UL
+#define F_CPU 1000000UL
+
+#include <util/delay.h>
 
 volatile uint8_t keep_on_loopin=1;
 volatile uint8_t timer_flag=0;
@@ -40,21 +40,19 @@ volatile uint8_t timer_flag=0;
  */
 int main(void)
  {
+	uint8_t counter;
+	 
 	board_init();
 	
 	init_seven_segment_display();
 	clear_seven_segment_display();
-	
-	TIFR = (1 << TOV0);			// clear interrupt flag
-	TIMSK = (1 << TOIE0);		// enable overflow interrupt
-	TCCR0B = (1 << CS00);		// start timer, no prescaler
-	
-	sei();						// Enable interrupts
+	display_test();
 	
 	while (keep_on_loopin) {
 		
-		display_test();
-		
+		for(counter=0 ; counter < 100 ; counter++)
+			display_value(counter);
+			
 		clear_seven_segment_display();
 		_delay_ms(200);
 		_delay_ms(200);
@@ -71,11 +69,6 @@ void board_init(void)
 {
 	/* Pins default to input after reset */
 	
-	DDRB = 0x38;	// Set PortB pins 3, 4, and 5 as outputs
-//	PORTA = 0xAE;	// enable pull-ups on unused pins
-	PORTA |= (1 << PORTA0);		// enable pull-up on the button input
-	DDRA = PORTA_MASK;			// set necessary port pins to output for LEDs
-
-	  
-	LED_OFF
+	DDRB |= (1 << PORTB2) | (1 << PORTB3);	// Set PB4 and PB5 as outputs !!!!!!! change to 4 and 5
+	DDRA = 0xFF;	// set all port A pins as outputs
 }
