@@ -6,10 +6,13 @@
  * Metre Ideas and Design
  * Copyright (c) 2016
  *
- * This program reads an analog input on ADC0 (pin PA0). An external interrupt
- * (INT0 on pin PB2) is also provided which can be used to trigger the chip to
- * store the current analog input value to a reference variable. Current samples
- * can then be compared to this reference value.
+ * This program is an example driver for a two-digit seven segment LED display module.
+ * The two digits of the display module share a common set of control lines.
+ * Therefore, to display a two-digit number the individual digits must be displayed
+ * one at time and cycled back and forth continuously.
+
+ * This code was originally developed for use with the Lite-On LTD2601 display
+ * module (common anode).
  *
  * Developed for use with Atmel ATtiny261A / ATtiny461A / ATtiny861A
  * For ATtiny261A/461A/861A Prototyping boards go to

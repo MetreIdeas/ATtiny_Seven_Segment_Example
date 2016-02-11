@@ -38,6 +38,10 @@
 *.cproj
 *.xml
 
+#Altium Files
+*.schdoc
+/History
+
 # =========================
 # Operating System Files
 # =========================
