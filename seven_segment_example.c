@@ -20,17 +20,10 @@
  *
  */ 
 
-#include <avr/sleep.h>
+#include <stdint.h>
 #include "seven_segment_example.h"
 #include "seven_segment_display.h"
-#include <avr/power.h>
 #include <avr/io.h>
-
-/* set the correct clock frequency based on fuse settings or external clock/crystal
- * has to be done before including delay.h */
-#define F_CPU 1000000UL
-
-#include <util/delay.h>
 
 volatile uint8_t keep_on_loopin=1;
 volatile uint8_t timer_flag=0;
@@ -39,7 +32,8 @@ volatile uint8_t timer_flag=0;
  * \brief Main routine
  */
 int main(void)
- {
+{
+	uint8_t i;
 	uint8_t counter;
 	 
 	board_init();
@@ -51,17 +45,17 @@ int main(void)
 	while (keep_on_loopin) {
 		
 		for(counter=0 ; counter < 100 ; counter++)
-			display_value(counter);
-			
+		{
+			// The value sent to the display gets looped several times.
+			// To increase the length of time that a digit is displayed,
+			// increase the number of loops.
+			for(i=0 ; i < 20 ; i++)
+				display_value(counter);
+		}
+		
 		clear_seven_segment_display();
-		_delay_ms(200);
-		_delay_ms(200);
-		_delay_ms(200);
-		_delay_ms(200);
-		_delay_ms(200);
-			
+		
 	} // end while
-	
 } // end main
 
 
@@ -69,6 +63,6 @@ void board_init(void)
 {
 	/* Pins default to input after reset */
 	
-	DDRB |= (1 << PORTB2) | (1 << PORTB3);	// Set PB4 and PB5 as outputs !!!!!!! change to 4 and 5
-	DDRA = 0xFF;	// set all port A pins as outputs
+	DDRB |= (1 << DIGIT1) | (1 << DIGIT2);	// set common digit controls as outputs 
+	DDRA = 0xFF;							// set all port A pins as outputs (digit segment data)
 }

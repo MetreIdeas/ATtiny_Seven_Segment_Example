@@ -11,6 +11,11 @@
 
 #include <avr/io.h>
 #include "seven_segment_display.h"
+
+/* set the correct clock frequency based on fuse settings or external clock/crystal
+ * has to be done before including delay.h */
+#define F_CPU 1000000UL
+
 #include <util/delay.h>
 
 
@@ -88,14 +93,13 @@ void display_value(uint8_t value)
 void display_digit(uint8_t value, uint8_t digit, uint8_t decimal)
 {
 	uint8_t segment_data;
-	uint8_t i;
 
 	segment_data = digitCode[value];
 	if(decimal == TRUE)
 		segment_data &= 0x7F;		// clear the decimal point bit to enable decimal
 
 #ifdef COMMON_CATHODE
-	~segment_data;
+	segment_data = ~segment_data;
 #endif
 
 	PORTA = segment_data;
@@ -109,6 +113,10 @@ void display_digit(uint8_t value, uint8_t digit, uint8_t decimal)
 		DIGIT2_ON
 		DIGIT1_OFF
 	}
+	
+	// Delay so that the current digit is on for a small amount of time
+	// before the next digit is displayed.
+	_delay_ms(5);
 }
 
 

@@ -15,16 +15,15 @@
 #define TRUE  1
 #define FALSE 0
 
+#define DIGIT1			PORTB4	// common connection for digit 1
+#define DIGIT2			PORTB5	// common connection for digit 2
+
 /* SEGMENT ON OFF states */
 /* This assumes an active high state */
-#define	DIGIT1_ON		PORTB |= (1 << PORTB2);	// CHANGE BACK TO B4
-#define DIGIT1_OFF		PORTB &= ~(1 << PORTB2);// CHANGE BACK TO B4
-#define	DIGIT2_ON		PORTB |= (1 << PORTB3);// CHANGE BACK TO B5
-#define DIGIT2_OFF		PORTB &= ~(1 << PORTB3);// CHANGE BACK TO B5
-
-#define DISPLAY_PORT	PORTA
-#define DIGIT1			PORTB2// CHANGE BACK TO B4
-#define DIGIT2			PORTB3// CHANGE BACK TO B5
+#define	DIGIT1_ON		PORTB |= (1 << DIGIT1);
+#define DIGIT1_OFF		PORTB &= ~(1 << DIGIT1);
+#define	DIGIT2_ON		PORTB |= (1 << DIGIT2);
+#define DIGIT2_OFF		PORTB &= ~(1 << DIGIT2);
 
 /* Define either COMMON_ANODE or COMMON_CATHODE  */
 #define COMMON_ANODE
